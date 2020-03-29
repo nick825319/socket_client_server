@@ -1,7 +1,7 @@
 import socket
 
 ip = '127.0.0.1'
-#ip = '140.122.185.98'
+
 port = 7777
 
 client_socket = socket.socket()
