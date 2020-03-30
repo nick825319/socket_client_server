@@ -10,28 +10,35 @@ print("connect to ", (ip, port))
 
 image_name = "image%s.png"
 
-#content = input("image name (add file Extension name, 'BYE' for disconnect):")
-content = image_name = "image%s.png" % 1
+while True:
+    content = input("image name (add file Extension name, '-1' for disconnect):")
+    if content is None or content == "":
+        content = image_name = "image%s.png" % 1
+    elif content == -1:
+        client_socket.send(bytes("BYE", encoding='utf-8'))
+        client_socket.close()
+        break
 
-# sending test to server
-# client_socket.send(bytes(content, encoding='utf-8'))
-# recvdata = client_socket.recv(1024)
-# print(str(recvdata))
+    # sending test message to server
+    # client_socket.send(bytes(content, encoding='utf-8'))
+    # recvdata = client_socket.recv(1024)
+    # print(str(recvdata))
+    try:
+        # open file
+        file = open(image_name, "rb")
+        file_bytes = file.read()
+        size = len(file_bytes)
 
-# open file
-file = open(image_name, "rb")
-file_bytes = file.read()
-size = len(file_bytes)
-
-# send size
-client_socket.send(bytes("SIZE %s" % size, encoding='utf-8'))
-recvdata = client_socket.recv(1024)
-print(str(recvdata))
-# send image bytes
-if recvdata == b"GOT SIZE":
-    client_socket.sendall(file_bytes)
-    recvdata = client_socket.recv(1024)
-    print(str(recvdata))
-    client_socket.close()
+        # send size
+        client_socket.send(bytes("SIZE %s" % size, encoding='utf-8'))
+        recvdata = client_socket.recv(1024)
+        print(str(recvdata))
+        # send image bytes
+        if recvdata == b"GOT SIZE":
+            client_socket.sendall(file_bytes)
+            recvdata = client_socket.recv(1024)
+            print(str(recvdata))
+    except Exception:
+        pass
 
 
